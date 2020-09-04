@@ -17,6 +17,9 @@ jobs:
     # Basic Checks
     - stage: primary
       env: TOXENV=docs
+      arch:
+        - ppc64le
+        - amd64
     - env: TOXENV=lint
     - env: TOXENV=vendoring
 
@@ -24,12 +27,25 @@ jobs:
     # PyPy
     - stage: secondary
       env: GROUP=1
+      arch:
+        - ppc64le
+        - amd64
+
       python: pypy3.5-7.0.0
     - env: GROUP=2
+      arch:
+        - ppc64le
+        - amd64
       python: pypy3.5-7.0.0
     - env: GROUP=1
+      arch:
+        - ppc64le
+        - amd64
       python: pypy2.7-7.1.1
     - env: GROUP=2
+      arch:
+        - ppc64le
+        - amd64
       python: pypy2.7-7.1.1
 
     # Test experimental stuff that are not part of the standard pip usage.
@@ -38,12 +54,22 @@ jobs:
       env:
       - GROUP=1
       - NEW_RESOLVER=1
+      arch:
+        - ppc64le
+        - amd64
     - env:
       - GROUP=2
       - NEW_RESOLVER=1
+      arch:
+       - ppc64le
+       - amd64
     - env:
       - GROUP=3
       - NEW_RESOLVER=1
+      arch:
+       - ppc64le
+       - amd64
+
 
   fast_finish: true
   allow_failures:
@@ -52,6 +78,10 @@ jobs:
       - NEW_RESOLVER=1
 
 before_install: tools/travis/setup.sh
+      - |
+  if [[ "${TRAVIS_CPU_ARCH}" == "ppc64le" ]]; then
+         sudo chown -Rvf $USER:$GROUP ~/.cache/pip/wheels
+  fi
 install: travis_retry tools/travis/install.sh
 script: tools/travis/run.sh
 
